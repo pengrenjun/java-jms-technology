@@ -64,4 +64,16 @@
     </bean>
     <!--Spring JmsTemplate 的消息生产者 end-->
 
+    <!--配置Message消费端监听器-->
+    <bean id="jmsMessageConsumer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="cachingConnectionFactory"/>
+        <property name="destination" ref="QueueDestination"/>
+        <property name="messageListener" ref="messageListener"/>
+    </bean>
+
+    <!--消息监听器-->
+    <bean id="messageListener" class="com.activemq.consumerListener.MessageListenerImpl">
+    </bean>
+
 </beans>

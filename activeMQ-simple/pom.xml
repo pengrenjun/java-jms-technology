@@ -14,11 +14,13 @@
     <name>activeMQ-simple</name>
 
    <dependencies>
+       <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-all -->
        <dependency>
-           <groupId>org.apache.com.activemq</groupId>
-           <artifactId>com.activemq-all</artifactId>
+           <groupId>org.apache.activemq</groupId>
+           <artifactId>activemq-all</artifactId>
            <version>5.15.9</version>
        </dependency>
+
 
        <dependency>
            <groupId>org.apache.xbean</groupId>
