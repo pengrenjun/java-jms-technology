@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>java-jms- technology</artifactId>
+        <groupId>java-jms- technology</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>activeMQ-spring-integration</artifactId>
+    <description>activeMQ与spring集成开发</description>
+
+    <dependencies>
+
+        <!--spring支持JMS的jar包-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.jms</artifactId>
+            <version>3.1.0.RELEASE</version>
+        </dependency>
+
+
+        <!--ActiveMQ的pool包-->
+        <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-pool -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-pool</artifactId>
+            <version>5.15.9</version>
+        </dependency>
+    </dependencies>
+
+</project>
