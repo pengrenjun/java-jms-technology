@@ -8,6 +8,7 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
@@ -21,16 +22,20 @@ import javax.jms.Session;
 @Service
 public class AMQTopicSenderService {
 
-    @Resource(name="jmsTopicTemplate")
-    private JmsTemplate jmsTopicTemplate;
+    @Resource(name="jmsTopicTemplate61617")
+    private JmsTemplate jmsTopicTemplate61617;
 
-    //向特定的队列发送消息
-    public void sendMsg(QueueMessageBo queueMessageBo) {
+    @Resource(name="jmsTopicTemplate61616")
+    private JmsTemplate jmsTopicTemplate61616;
+
+
+    //向默认的队列发送消息
+    public void sendMsgto61616(QueueMessageBo queueMessageBo) {
 
         final String msg =JSONObject.toJSONString(queueMessageBo);
         try {
             //向jmsTopicTemplate配置的默认的spring-topic 中存放消息数据
-            jmsTopicTemplate.send(new MessageCreator() {
+            jmsTopicTemplate61616.send(new MessageCreator() {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
 
@@ -41,9 +46,33 @@ public class AMQTopicSenderService {
             e.printStackTrace();
         }
 
-        System.out.println(msg+"消息发布完毕");
+        System.out.println("61616topic消息发布完毕");
 
 
     }
+
+    //向特定的队列发送消息
+    public void sendMsgto61616(QueueMessageBo queueMessageBo, Destination destination) {
+
+        final String msg =JSONObject.toJSONString(queueMessageBo);
+        jmsTopicTemplate61616.setDefaultDestination(destination);
+        try {
+            //向jmsTopicTemplate配置的默认的spring-topic 中存放消息数据
+            jmsTopicTemplate61616.send(new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+
+                    return session.createTextMessage(msg);
+                }
+            });
+        } catch (JmsException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("61616topic消息发布完毕");
+
+
+    }
+
 
 }
