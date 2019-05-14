@@ -35,13 +35,13 @@ public class TestJmsTemplate {
 
         QueueMessageBo queueMessageBoA=new QueueMessageBo(UUID.randomUUID().toString(),"测试发送queue消息A",new Date());
 
-        amqQueueSenderService.sendMsg(queueMessageBoA);
+        amqQueueSenderService.sendMsgTo61616(queueMessageBoA);
 
         Thread.sleep(10000);
 
         QueueMessageBo queueMessageBoB=new QueueMessageBo(UUID.randomUUID().toString(),"测试发送queue消息B",new Date());
 
-        amqQueueSenderService.sendMsg(queueMessageBoB);
+        amqQueueSenderService.sendMsgTo61616(queueMessageBoB);
 
 
 
@@ -52,7 +52,7 @@ public class TestJmsTemplate {
 
         QueueMessageBo queueMessageBo=new QueueMessageBo(UUID.randomUUID().toString(),"测试发布Topic消息",new Date());
 
-        amqTopicSenderService.sendMsg(queueMessageBo);
+        amqTopicSenderService.sendMsgto61616(queueMessageBo);
 
     }
 }
