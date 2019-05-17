@@ -12,7 +12,7 @@ import static javax.jms.Session.AUTO_ACKNOWLEDGE;
  * @Date : 2018/11/10 0010 19:20
  * @version:1.0
  */
-public class DurableTopicSubscriber {
+public class DurableTopicSubscriberB {
 
 
     //注意 持久化的订阅消费模式 订阅者需要先启动一次 在jms中先进行注册 这样发送者才会根据客户端的Id标识实现消息的存储发送
@@ -64,7 +64,7 @@ public class DurableTopicSubscriber {
     }
 
     public static void main(String[] args) throws JMSException, InterruptedException {
-        DurableTopicSubscriber customer=new DurableTopicSubscriber();
+        DurableTopicSubscriberB customer=new DurableTopicSubscriberB();
         customer.startCustom();
     }
 }

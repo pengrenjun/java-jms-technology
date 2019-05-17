@@ -31,7 +31,7 @@ public class AMQQueueSenderService  {
 
 
     //向默认的队列发送消息(xml中配置)
-    public void sendMsgTo61616(QueueMessageBo queueMessageBo) {
+    public void sendMsgTo61616(final QueueMessageBo queueMessageBo) {
 
 
         final String msg =JSONObject.toJSONString(queueMessageBo);
@@ -44,6 +44,7 @@ public class AMQQueueSenderService  {
 
                     MapMessage mapMessage = session.createMapMessage();
                     mapMessage.setString("info",msg);
+                    System.out.println("向61616消息发送完毕 内容："+queueMessageBo.getContent());
                     return mapMessage;
                 }
             });
@@ -51,7 +52,7 @@ public class AMQQueueSenderService  {
             e.printStackTrace();
         }
 
-        System.out.println("向61616消息发送完毕");
+
     }
 
     //向特定的队列发送消息 指定目标
@@ -76,7 +77,7 @@ public class AMQQueueSenderService  {
             e.printStackTrace();
         }
 
-        System.out.println("向61616消息发送完毕");
+        System.out.println("向61616消息发送完毕 内容："+queueMessageBo.getContent());
     }
 
     //向特定的队列发送消息

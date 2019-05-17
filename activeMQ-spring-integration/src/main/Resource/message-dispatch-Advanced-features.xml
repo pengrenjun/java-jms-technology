@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	 http://activemq.apache.org/schema/core
+     http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+    <!--AMQ 消息分发高级特性测试-->
+    <!--扫描自定义的ActiveMQ的服务组件-->
+    <context:component-scan base-package="com.activemq"/>
+
+	<!--61617的连接池-->
+    <bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+          destroy-method="stop">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <!--采用failover方式连接，如果所要连接的服务器或者Activemq服务宕了，那么程序会一直处于等待状态，不超时，不报错。
+                   所以需要设置重连的次数默认为-1 代表不限次数重连 0：代表不进行重连 大于0的数代表重连的次数
+                -->
+                <property name="brokerURL">
+                    <value>failover:(tcp://10.0.99.197:61617,tcp://10.0.99.197.61616)?randomize=false&amp;maxReconnectAttempts=1</value>
+                </property>
+                <!--异步发送消息 默认为true-->
+                <property name="useAsyncSend" value="true"/>
+            </bean>
+        </property>
+        <property name="maxConnections" value="100"></property>
+    </bean>
+
+    <!--61616的连接池-->
+    <bean id="jmsFactory61616" class="org.apache.activemq.pool.PooledConnectionFactory"
+          destroy-method="stop">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL">
+                    <value>tcp://10.0.99.197:61616</value>
+                </property>
+            </bean>
+        </property>
+        <property name="maxConnections" value="100"></property>
+    </bean>
+
+    <!--使用缓存可以提升效率-->
+    <bean id="cachingConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="jmsFactory"/>
+        <property name="sessionCacheSize" value="1"/>
+    </bean>
+
+    <!--使用缓存可以提升效率-->
+    <bean id="cachingConnectionFactory61616" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="jmsFactory61616"/>
+        <property name="sessionCacheSize" value="1"/>
+    </bean>
+
+    <!-- Spring JmsTemplate 的消息生产者 start-->
+    <!-- 定义JmsTemplate的Queue类型 -->
+    <bean id="jmsQueueTemplate61616" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+        <constructor-arg ref="jmsFactory61616" />
+        <!-- 非pub/sub模型（发布/订阅），即队列模式 -->
+        <property name="defaultDestination" ref="QueueDestination"></property>
+        <property name="pubSubDomain" value="false" />
+        <property name="messageConverter">
+            <bean class="org.springframework.jms.support.converter.SimpleMessageConverter"/>
+        </property>
+    </bean>
+
+    <!-- Spring JmsTemplate 的消息生产者 start-->
+    <!-- 定义JmsTemplate的Queue类型 -->
+    <bean id="jmsQueueTemplate61617" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+        <constructor-arg ref="jmsFactory" />
+        <property name="defaultDestination" ref="QueueDestination"></property>
+        <!-- 非pub/sub模型（发布/订阅），即队列模式 -->
+        <property name="pubSubDomain" value="false" />
+        <property name="messageConverter">
+            <bean class="org.springframework.jms.support.converter.SimpleMessageConverter"/>
+        </property>
+    </bean>
+
+
+
+    <!-- 定义JmsTemplate的Topic类型 61617 topic发送 -->
+    <bean id="jmsTopicTemplate61617" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+        <constructor-arg ref="jmsFactory" />
+        <!-- pub/sub模型（发布/订阅） -->
+        <property name="defaultDestination" ref="TopicDestination"></property>
+        <property name="pubSubDomain" value="true" />
+        <property name="messageConverter">
+            <bean class="org.springframework.jms.support.converter.SimpleMessageConverter"/>
+        </property>
+    </bean>
+
+    <!-- 定义JmsTemplate的Topic类型 61616topic发送 -->
+    <bean id="jmsTopicTemplate61616" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+        <constructor-arg ref="jmsFactory61616" />
+        <property name="defaultDestination" ref="TopicDestination"></property>
+        <!-- pub/sub模型（发布/订阅） -->
+        <property name="pubSubDomain" value="true" />
+        <property name="messageConverter">
+            <bean class="org.springframework.jms.support.converter.SimpleMessageConverter"/>
+        </property>
+    </bean>
+
+    <!--Spring JmsTemplate 的消息生产者 end-->
+    <!--默认测试Queue-->
+    <bean id="QueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="Default-TestMessageDispatch-Queue"/>
+    </bean>
+
+    <!--测试Topic-->
+    <bean id="TopicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg index="0" value="Default-TestMessageDispatch-Topic"/>
+    </bean>
+
+
+    <!--配置Message61616消费端监听器A  监听组合队列Queues的消息
+        对组合队列进行监听 可以减少监听器的配置了 一个监听器可以实现对多个队列的监听
+     -->
+    <bean id="jmsMessageConsumer61616A"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="cachingConnectionFactory61616"/>
+        <property name="destination" ref="TopicDestination"/>
+        <property name="messageListener" ref="message61616AListener"/>
+    </bean>
+
+    <bean id="jmsMessageConsumer61616b"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="cachingConnectionFactory61616"/>
+        <property name="destination" ref="TopicDestination"/>
+        <property name="messageListener" ref="message61616BListener"/>
+    </bean>
+
+
+    <!--61616消息监听器A-->
+    <bean id="message61616AListener" class="com.activemq.MessageDispatchAdvancedFeatures.Message61616ListenerA">
+    </bean>
+
+    <!--61616消息监听器B-->
+    <bean id="message61616BListener" class="com.activemq.MessageDispatchAdvancedFeatures.Message61616ListenerB">
+    </bean>
+
+    
+
+</beans>

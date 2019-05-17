@@ -46,7 +46,7 @@ public class AMQTopicSenderService {
             e.printStackTrace();
         }
 
-        System.out.println("61616topic消息发布完毕");
+        System.out.println("61616topic消息发布完毕 内容："+queueMessageBo.getContent());
 
 
     }
