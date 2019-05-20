@@ -40,6 +40,7 @@
                     <value>tcp://10.0.99.197:61616?jms.blobTransferPolicy.uploadUrl=http://localhost:8080/fileserver/</value>
                 </property>
 
+                <!--消息转换器可序列化的类-->
                 <property name="trustAllPackages" value="true"/>
             </bean>
         </property>
