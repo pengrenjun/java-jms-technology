@@ -5,5 +5,10 @@
     <file url="file://$PROJECT_DIR$/activeMQ-simple" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/activeMQ-simple/src/main/java/simpleDemo/QueueDemo/Producer.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/activeMQ-spring-integration" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jetty-file-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jetty-file-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jetty-file-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jetty-file-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jms-file-server" charset="UTF-8" />
   </component>
 </project>

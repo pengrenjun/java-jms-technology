@@ -31,12 +31,6 @@ public class TestMessageDispatch {
     @Autowired
     private AMQTopicSenderService amqTopicSenderService;
 
-
-
-
-
-
-
     /**
      * 测试向197 broker1 61616发送消息
      * @throws InterruptedException
@@ -72,6 +66,7 @@ public class TestMessageDispatch {
 
         }
 
+        /*经过测试发现 多个线程的消息发送者发送消息 两个监听者消费消息 可以保证消息的顺序消费*/
         ProducerThread producerThreadA=new ProducerThread(queueMessageBoListA,amqTopicSenderService);
 
         ProducerThread producerThreadB=new ProducerThread(queueMessageBoListB,amqTopicSenderService);

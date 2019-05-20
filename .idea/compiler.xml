@@ -6,9 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="activeMQ-simple" />
+        <module name="jms-file-server" />
         <module name="activeMQ-spring-integration" />
+        <module name="activeMQ-simple" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jetty-file-server" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
