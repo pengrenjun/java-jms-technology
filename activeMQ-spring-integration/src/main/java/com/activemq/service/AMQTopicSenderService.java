@@ -37,6 +37,9 @@ public class AMQTopicSenderService {
     @Resource(name="jmsTopicTemplate61616")
     private JmsTemplate jmsTopicTemplate61616;
 
+    @Resource(name="userMessageConverter")
+    private MessageConverter userMessageConverter;
+
 
     //向默认的队列发送消息
     public void sendMsgto61616(QueueMessageBo queueMessageBo) {
@@ -147,7 +150,18 @@ public class AMQTopicSenderService {
     }
 
 
+    //向队列直接发送对象 通过转换器对其进行转化
+    public void convertAndSendBoTo61616(QueueMessageBo queueMessageBo,Destination destination) {
 
+        jmsTopicTemplate61616.setDefaultDestination(destination);
+        jmsTopicTemplate61616.setMessageConverter(userMessageConverter);
+
+        //这种方式很简洁
+        jmsTopicTemplate61616.convertAndSend(queueMessageBo);
+
+
+        System.out.println("61616topic发送转换的消息完毕 内容："+queueMessageBo.getContent());
+    }
 
 
 

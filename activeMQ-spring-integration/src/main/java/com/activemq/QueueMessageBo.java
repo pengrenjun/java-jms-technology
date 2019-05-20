@@ -1,5 +1,6 @@
 package com.activemq;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  * @Date : 2019/5/6 0006 21:56
  * @version:1.0
  */
-public class QueueMessageBo {
+public class QueueMessageBo implements Serializable {
 
     private String id;
 

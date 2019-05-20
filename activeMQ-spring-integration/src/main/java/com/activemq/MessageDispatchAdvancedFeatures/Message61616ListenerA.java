@@ -13,6 +13,9 @@ import javax.jms.*;
  * @version:1.0
  */
 public class Message61616ListenerA implements MessageListener {
+
+
+
     @Override
     public void onMessage(Message message) {
 

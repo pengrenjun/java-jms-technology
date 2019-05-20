@@ -38,6 +38,9 @@ public class TestMessageDispatch {
     @Resource(name="BlobMessageTopic")
     private ActiveMQTopic blobMessageTopic;
 
+    @Resource(name="BoConvertMessageTopic")
+    private ActiveMQTopic boConvertMessageTopic;
+
 
     /**
      * 测试向197 broker1 61616发送topic消息 并且监听advisory topic 的系统记录的消息
@@ -113,13 +116,22 @@ public class TestMessageDispatch {
 
           File file=new File("pom.xml");
 
-          amqTopicSenderService.sendBlobMsgto61616(file,blobMessageTopic);
+         // amqTopicSenderService.sendBlobMsgto61616(file,blobMessageTopic);
 
-//          BlobMessageProducer blobMessageProducer=new BlobMessageProducer(file);
-//
-//          blobMessageProducer.startProduce();
+          BlobMessageProducer blobMessageProducer=new BlobMessageProducer(file);
+
+          blobMessageProducer.startProduce();
 
           Thread.sleep(10*1000);
+
+    }
+
+
+    @Test
+    public void testConvertAndSendBoMessage(){
+
+        QueueMessageBo queueMessageBo=new QueueMessageBo("1","转换器消息测试发送",new Date());
+        amqTopicSenderService.convertAndSendBoTo61616(queueMessageBo,boConvertMessageTopic);
 
 
     }
