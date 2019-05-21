@@ -80,7 +80,7 @@ public class AMQQueueSenderService  {
         System.out.println("向61616消息发送完毕 内容："+queueMessageBo.getContent());
     }
 
-    //向特定的队列发送消息
+    //向61617发送消息
     public void sendMsgTo61617(QueueMessageBo queueMessageBo) {
 
         final String msg =JSONObject.toJSONString(queueMessageBo);
@@ -100,6 +100,32 @@ public class AMQQueueSenderService  {
         }
 
         System.out.println("向61617消息发送完毕");
+    }
+
+    //向特定的队列发送分组消息 实现同一个组的消息由相同的消费者进行消费 不同组的消息由不同消费者处理 即可以保证顺序消费又可以实现负载均衡  指定目标
+    public void sendGroupMapMsgTo61616(QueueMessageBo queueMessageBo, Destination destination, final String groupId) {
+
+
+        final String msg =JSONObject.toJSONString(queueMessageBo);
+        try {
+            jmsQueueTemplate61616.setDefaultDestination(destination);
+
+            //向jmsQueueTemplate配置的默认的spring-queue 中存放消息数据
+            jmsQueueTemplate61616.send(new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+
+                    MapMessage mapMessage = session.createMapMessage();
+                    mapMessage.setStringProperty("JMSXGroupID",groupId);
+                    mapMessage.setString("info",msg);
+                    return mapMessage;
+                }
+            });
+        } catch (JmsException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("向61616发送分组消息完毕 内容："+queueMessageBo.getContent());
     }
 
 }
