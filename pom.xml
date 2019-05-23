@@ -12,6 +12,8 @@
       <module>activeMQ-simple</module>
       <module>activeMQ-spring-integration</module>
       <module>jms-file-server</module>
+      <module>kafka-study-demo</module>
+    <module>kafka-study-demo</module>
   </modules>
 
   <name>java-jms- technology</name>
@@ -45,6 +47,20 @@
       <artifactId>fastjson</artifactId>
       <version>1.2.47</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0-rc1</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+
 
 
   </dependencies>
