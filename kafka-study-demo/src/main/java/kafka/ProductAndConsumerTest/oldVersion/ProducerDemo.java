@@ -1,12 +1,16 @@
-package kafka.ProductAndConsumerTest;
+package kafka.ProductAndConsumerTest.oldVersion;
 
 import java.util.Properties;
 
+import kafka.ProductAndConsumerTest.PatitionersImpl.HashPartitioner;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 import kafka.serializer.StringEncoder;
 
+/**
+ * 基于0.8.1版本的写法
+ */
 public class ProducerDemo {
 
   static private final String TOPIC = "test1";
@@ -14,6 +18,7 @@ public class ProducerDemo {
   static private final String BROKER_LIST = "10.0.99.197:9092";
 //  static private final int PARTITIONS = TopicAdmin.partitionNum(ZOOKEEPER, TOPIC);
   static private final int PARTITIONS = 3;
+
 
 
   public static void main(String[] args) throws Exception {

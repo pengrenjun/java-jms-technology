@@ -1,4 +1,4 @@
-package kafka.ProductAndConsumerTest;
+package kafka.ProductAndConsumerTest.newVersion;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 /**
- * @Description TODO
+ * @Description Kafka 2.12_1.1.0 版本的消费测试
  * @Date 2019/5/23 0023 下午 4:37
  * @Created by Pengrenjun
  */
@@ -27,11 +27,12 @@ public class ConsumerTest {
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList("topicTest"));
+        consumer.subscribe(Arrays.asList("test1"));
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(10000);
             for (ConsumerRecord<String, String> record : records)
-                System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+                System.out.printf(" Topic:%s, offset = %d, PartitionID:%s,key = %s, value = %s%n",
+                        record.topic(),record.offset(),record.partition(), record.key(), record.value());
         }
     }
     public static void main(String[] args){

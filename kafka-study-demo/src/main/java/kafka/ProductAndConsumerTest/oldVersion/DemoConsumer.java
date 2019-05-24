@@ -1,4 +1,4 @@
-package kafka.ProductAndConsumerTest;
+package kafka.ProductAndConsumerTest.oldVersion;
 
 import java.util.HashMap;
 import java.util.List;
