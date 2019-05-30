@@ -1,7 +1,7 @@
 package kafka.ProductAndConsumerTest.newVersion;
 
+import kafka.properties.KafkaProducerPropertiesUtils;
 import kafka.ProductAndConsumerTest.PatitionersImpl.HashPartitioner;
-import kafka.ProductAndConsumerTest.KafkaProducerUtils;
 import org.apache.kafka.clients.producer.*;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class ProducerTest {
     @Test
     public  void sendByRoundRobinPartitioner(){
 
-        Properties props = KafkaProducerUtils.getProducerProperties(null);
+        Properties props = KafkaProducerPropertiesUtils.getProducerProperties(null);
 
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
         for (int i = 1; i <= 10; i++){
@@ -54,7 +54,7 @@ public class ProducerTest {
 
         properties.put("partitioner.class", HashPartitioner.class);
 
-        Properties props = KafkaProducerUtils.getProducerProperties(properties);
+        Properties props = KafkaProducerPropertiesUtils.getProducerProperties(properties);
 
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
         for (int i = 1; i <= 10; i++){

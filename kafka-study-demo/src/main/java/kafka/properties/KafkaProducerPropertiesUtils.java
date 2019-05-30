@@ -1,15 +1,16 @@
-package kafka.ProductAndConsumerTest;
+package kafka.properties;
 
+import kafka.ProductAndConsumerTest.PatitionersImpl.HashPartitioner;
 import kafka.ProductAndConsumerTest.PatitionersImpl.RoundRobinPartitioner;
 
 import java.util.Properties;
 
 /**
- * @Description Kafka生产者工具类
+ * @Description Kafka生产者配置信息工具类
  * @Date 2019/5/24 0024 上午 11:30
  * @Created by Pengrenjun
  */
-public class KafkaProducerUtils {
+public class KafkaProducerPropertiesUtils {
 
     /**
      * 获取发送方的配置文件
@@ -28,7 +29,7 @@ public class KafkaProducerUtils {
          *   配置格式： host1:port1,host2:port2,.... 由于这些主机是用于初始化连接，以获得整个集群（集群是会动态变化的），
          *    因此这个配置清单不需要包含整个集群的服务器。（当然，为了避免单节点风险，这个清单最好配置多台主机）
          */
-        props.put("bootstrap.servers", "10.0.99.197:9092");//kafka集群
+        props.put("bootstrap.servers", "10.0.99.197:9092,10.0.99.171:9092");//kafka集群
         /**
          * high [all, -1, 0, 1] default:1
          * 此配置是 Producer 在确认一个请求发送完成之前需要收到的反馈信息的数量。 这个参数是为了保证发送请求的可靠性
@@ -101,7 +102,7 @@ public class KafkaProducerUtils {
          * 为了更好的实现负载均衡和消息的顺序性，Kafka Producer可以通过分发策略发送给指定的Partition
          * 实现 org.apache.kafka.clients.producer.Partitioner 接口。
          */
-        props.put("partitioner.class", RoundRobinPartitioner.class);
+        props.put("partitioner.class", HashPartitioner.class);
 
         //添加覆盖配置的参数
         if(customerProperties!=null){

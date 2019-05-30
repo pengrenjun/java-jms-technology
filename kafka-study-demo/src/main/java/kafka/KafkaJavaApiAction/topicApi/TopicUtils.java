@@ -2,10 +2,13 @@ package kafka.KafkaJavaApiAction.topicApi;
 
 import com.google.common.base.Preconditions;
 import kafka.admin.AdminUtils;
+import kafka.admin.BrokerMetadata;
 import kafka.server.ConfigType;
 import kafka.utils.ZkUtils;
 import org.apache.kafka.common.security.JaasUtils;
 import org.springframework.util.ObjectUtils;
+import scala.collection.Map;
+import scala.collection.Seq;
 
 import java.util.Objects;
 import java.util.Properties;
@@ -42,7 +45,7 @@ public class TopicUtils {
         try {
 
             //主题是否存在
-            if(!AdminUtils.topicExists(zkUtils,topic)){
+            if(!isTopicExist(topic)){
 
                 AdminUtils.createTopic(zkUtils,topic,partition,repilca,
                         Objects.isNull(properties)?AdminUtils.createTopic$default$5():properties,
@@ -59,6 +62,16 @@ public class TopicUtils {
         }finally{
                 zkUtils.close();
      }
+    }
+
+    /**
+     * 校验主题是否存在
+     * @param topic
+     * @return
+     */
+    public static boolean isTopicExist(String topic) {
+        ZkUtils zkUtils=getZkUtils();
+        return AdminUtils.topicExists(zkUtils,topic);
     }
 
     /**
@@ -90,5 +103,81 @@ public class TopicUtils {
     public static Properties getTopicProperties(String topic) {
         return AdminUtils.fetchEntityConfig (getZkUtils(), ConfigType.Topic(), topic);
     }
+
+    /**
+     * 为主题增加分区 并指定副本的分区策略
+     * @param topic
+     * @param sumPartitions 分区总数
+     * @param replicaPolicyExpression 副本分配策略
+     */
+    public static void addPartitions(String topic ,Integer sumPartitions,String replicaPolicyExpression){
+
+        ZkUtils zkUtils=getZkUtils();
+
+        try {
+            AdminUtils.addPartitions(zkUtils,topic,sumPartitions,replicaPolicyExpression,
+                    true,AdminUtils.addPartitions$default$6());
+
+            System.out.println("topic："+topic+" 已新增了分区并指定了副本的分区策略！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            zkUtils.close();
+        }
+    }
+
+    /**
+     * 删除主题
+     * @param topics
+     */
+    public static void deleteTopic(String ...topics){
+        ZkUtils zkUtils=getZkUtils();
+        try {
+            for (String topic:topics){
+                AdminUtils.deleteTopic(zkUtils,topic);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            zkUtils.close();
+        }
+
+    }
+
+    /**
+     * 修改主题的分区总数及副本数量
+     * @param topic
+     * @param sumPartitions
+     * @param sumReplicas
+     */
+    public static void creatOrUpdateTopicPartitionAndReplica(String topic,Integer sumPartitions,Integer sumReplicas){
+
+        ZkUtils zkUtils=getZkUtils();
+
+        try {
+            //生成分区及副本的分配方案
+            Map<Object, Seq<Object>> objectSeqMap = getTopicPartitionAssignmentSeqMap(sumPartitions, sumReplicas, zkUtils);
+            //修改分区及副本的分配方案
+            AdminUtils.createOrUpdateTopicPartitionAssignmentPathInZK(zkUtils,topic,objectSeqMap,null,true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            zkUtils.close();
+        }
+
+    }
+
+
+
+    private static Map<Object, Seq<Object>> getTopicPartitionAssignmentSeqMap(Integer sumPartitions, Integer sumReplicas, ZkUtils zkUtils) {
+        //获取元信息
+        Seq<BrokerMetadata> brokerMetadatas = AdminUtils.getBrokerMetadatas(zkUtils, AdminUtils.getBrokerMetadatas$default$2(), AdminUtils.getBrokerMetadatas$default$3());
+        //生成分区及副本的分配方案
+        return AdminUtils.assignReplicasToBrokers(brokerMetadatas, sumPartitions, sumReplicas,
+                AdminUtils.assignReplicasToBrokers$default$4(), AdminUtils.assignReplicasToBrokers$default$5());
+    }
+
+
 
 }
