@@ -5,7 +5,7 @@ import kafka.admin.AdminUtils;
 import kafka.server.ConfigType;
 import kafka.utils.ZkUtils;
 import org.apache.kafka.common.security.JaasUtils;
-import org.springframework.util.ObjectUtils;
+
 
 import java.util.Objects;
 import java.util.Properties;
