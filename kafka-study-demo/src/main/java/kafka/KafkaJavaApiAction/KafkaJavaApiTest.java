@@ -1,8 +1,6 @@
 package kafka.KafkaJavaApiAction;
 
 import kafka.KafkaJavaApiAction.topicApi.TopicUtils;
-import kafka.admin.AdminUtils;
-import kafka.utils.ZkUtils;
 import org.junit.Test;
 
 import java.util.Properties;
