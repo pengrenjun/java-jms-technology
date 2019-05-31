@@ -1,10 +1,16 @@
 package kafka.KafkaJavaApiAction;
 
+import kafka.KafkaJavaApiAction.ConsumerApi.KafkaSimpleConsumer;
 import kafka.KafkaJavaApiAction.producerApi.KafkaProducerUtil;
 import kafka.KafkaJavaApiAction.producerApi.ProducerSyncSendCallBackImpl;
 import kafka.KafkaJavaApiAction.topicApi.TopicUtils;
+import kafka.javaapi.PartitionMetadata;
+import kafka.javaapi.consumer.SimpleConsumer;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -120,4 +126,43 @@ public class KafkaJavaApiTest {
 
       }
 
-    }
+    /**
+     * 测试获取分区元信息
+     */
+     @Test
+      public void testFetchPartitionMetadate(){
+
+         PartitionMetadata partitionMetadata = KafkaSimpleConsumer.fetchPartitionMetadata(
+                 Arrays.asList(StringUtils.split(KafkaSimpleConsumer.BROKER_LIST, ",")),
+                 KafkaSimpleConsumer.PORT, "stock-quotation", 1);
+
+         System.out.println(partitionMetadata);
+     }
+
+    /**
+     * 获取偏移量
+     */
+    @Test
+     public void testGetOffset(){
+         //获取197里面分区副本记录的偏移量
+         SimpleConsumer simpleConsumer=KafkaSimpleConsumer.instanceSimpleConsumer();
+
+          //如果要查询的partion位于177上，但是连接的host是197 会报错
+         // Fetch last off set occurs exception : 3  error: org.apache.kafka.common.errors.UnknownTopicOrPartitionException
+         long lastOffset = KafkaSimpleConsumer.getLastOffset(simpleConsumer, "stock-quotation", 0,
+                 KafkaSimpleConsumer.latestTime, KafkaSimpleConsumer.clientId);
+
+         System.out.println(lastOffset);
+
+     }
+
+     @Test
+     public void testConsume() throws UnsupportedEncodingException, InterruptedException {
+
+        KafkaSimpleConsumer.consumePartitionRecord(Arrays.asList(StringUtils.split(KafkaSimpleConsumer.BROKER_LIST,",")),
+                KafkaSimpleConsumer.PORT,"stock-quotation",1);
+
+     }
+
+
+}
