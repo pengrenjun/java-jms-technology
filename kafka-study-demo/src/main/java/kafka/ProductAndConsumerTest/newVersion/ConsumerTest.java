@@ -31,7 +31,7 @@ public class ConsumerTest {
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(10000);
             for (ConsumerRecord<String, String> record : records)
-                System.out.printf(" Topic:%s, offset = %d, PartitionID:%s,key = %s, value = %s%n",
+                System.out.printf("consumer接受的数据： Topic:%s, offset = %d, PartitionID:%s,key = %s, value = %s%n",
                         record.topic(),record.offset(),record.partition(), record.key(), record.value());
         }
     }

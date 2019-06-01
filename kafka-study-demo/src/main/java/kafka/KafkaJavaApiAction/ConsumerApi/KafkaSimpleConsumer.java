@@ -285,7 +285,7 @@ public class KafkaSimpleConsumer {
                         payload.get(bytes);
 
                         //简单打印出消息及消息 offset
-                        logger .info (" 获取到的message :" + (new String(bytes , "UTF-8")) + ", offset :"+
+                        System.out.println(" 获取到的message :" + (new String(bytes , "UTF-8")) + ", offset :"+
                                 messageAndOffset.offset());
 
                         fetchNum++;

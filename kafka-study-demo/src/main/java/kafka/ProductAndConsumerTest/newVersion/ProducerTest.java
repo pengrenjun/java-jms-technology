@@ -14,6 +14,9 @@ import java.util.Properties;
  */
 public class ProducerTest {
 
+    //第一次启动需要先启动consumer进行主题的订阅(在Zooleeper需要先进行订阅者的注册，才会接受主题的信息)
+    // 再发送消息才会接受到数据 之后就不需要先启动consumer端了
+
     /**
      * 采用轮询分发的策略进行消息的发送 RoundRobinPartitioner
      */
