@@ -61,6 +61,13 @@
             <version>0.10.1.1</version>
         </dependency>
 
+        <!--kafka stream依赖 与kafka的版本要一致-->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+            <version>0.10.1.1</version>
+        </dependency>
+
     </dependencies>
 
 

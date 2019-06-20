@@ -33,7 +33,10 @@ public class KafkaJavaApiTest {
     @Test
     public void testCreateTopic(){
 
-       TopicUtils.createTopic("topicAD",2,1, null);
+//        Properties properties=new Properties();
+//        properties.put("bootstrap.servers","10.10.30.248:30299");
+
+        TopicUtils.createTopic("testkafka",1,1, null);
     }
 
     //修改主题的配置信息
@@ -90,7 +93,7 @@ public class KafkaJavaApiTest {
 
             KafkaProducerUtil<String,String> kafkaProduceUtil=new KafkaProducerUtil();
 
-            kafkaProduceUtil.syncSendRecord("stock-quotation",stockQuotationlnfo.getTradeTime(),
+            kafkaProduceUtil.syncSendRecord("testkafka",stockQuotationlnfo.getTradeTime(),
                     stockQuotationlnfo.getStockCode(),stockQuotationlnfo.toString(),null);
         }
 
@@ -331,7 +334,7 @@ public class KafkaJavaApiTest {
      */
     @Test
     public void testConsumerThreads() throws InterruptedException {
-        List<String> topics=Arrays.asList("topicAD");
+        List<String> topics=Arrays.asList("kafkaStream-test1");
 
         //topicAD共有2个分区 这里就用两个线程消费数据
         ExecutorService service=Executors.newFixedThreadPool(2);

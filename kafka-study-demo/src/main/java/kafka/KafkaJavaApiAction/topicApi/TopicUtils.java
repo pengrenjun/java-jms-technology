@@ -118,6 +118,7 @@ public class TopicUtils {
             AdminUtils.addPartitions(zkUtils,topic,sumPartitions,replicaPolicyExpression,
                     true,AdminUtils.addPartitions$default$6());
 
+
             System.out.println("topic："+topic+" 已新增了分区并指定了副本的分区策略！");
         } catch (Exception e) {
             e.printStackTrace();
