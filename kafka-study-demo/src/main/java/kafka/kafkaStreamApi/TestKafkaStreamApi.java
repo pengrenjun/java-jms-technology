@@ -4,6 +4,7 @@ import kafka.KafkaJavaApiAction.producerApi.KafkaProducerUtil;
 import kafka.KafkaJavaApiAction.topicApi.TopicUtils;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
 import org.junit.Test;
 
 import java.util.Map;
@@ -50,6 +51,26 @@ public class TestKafkaStreamApi {
 
         //数据只能消费一次
         kStream.print();
+
+        Thread.sleep(10000);
+        kafkaStreams.close();
+
+    }
+
+    @Test
+    public void testKTablePrint() throws InterruptedException {
+
+        KafkaStreamApiUtils<String,String> kafkaStreamApiUtils=new KafkaStreamApiUtils<String,String>("appId123");
+
+        Map<String, Object> topicKTable = kafkaStreamApiUtils.getTopicKTable(topicName,"kafkaStream-store");
+
+        KTable kTable=(KTable)topicKTable.get("KTable");
+
+        KafkaStreams kafkaStreams=(KafkaStreams)topicKTable.get("KafkaStreams");
+        kafkaStreams.start();
+
+        //数据只能消费一次
+        kTable.print();
 
         Thread.sleep(10000);
         kafkaStreams.close();

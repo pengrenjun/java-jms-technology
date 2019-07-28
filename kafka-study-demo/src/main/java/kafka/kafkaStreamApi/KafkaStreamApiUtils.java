@@ -6,6 +6,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
+import org.apache.kafka.streams.kstream.KTable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +58,24 @@ public class KafkaStreamApiUtils<K,V> {
         hashMap.put("KafkaStreams",kvKafkaStreams);
         return  hashMap;
     }
+
+    /**
+     * 创建某一个主题的日志记录流 key值对应的value是最新的
+     * @param topicId
+     * @param storeName the state store name used if this KTable is materialized, can be null if materialization not expected
+     * @return
+     */
+    public Map<String,Object>  getTopicKTable(String topicId,String storeName){
+
+        KTable<Object, Object> table = streamsBuilder.table(topicId, storeName);
+        //KafkaStreams 建立与topic的数据传输连接
+        KafkaStreams kvKafkaStreams=new KafkaStreams(streamsBuilder,properties);
+        HashMap hashMap=new HashMap();
+        hashMap.put("KTable",table);
+        hashMap.put("KafkaStreams",kvKafkaStreams);
+        return  hashMap;
+    }
+
 
 
 }
